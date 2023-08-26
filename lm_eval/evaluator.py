@@ -67,7 +67,7 @@ def simple_evaluate(
     """
     random.seed(1234)
     np.random.seed(1234)
-
+    
     assert tasks != [], "No tasks specified"
 
     if isinstance(model, str):
@@ -97,11 +97,11 @@ def simple_evaluate(
             + ".db",
         )
 
-    task_dict = lm_eval.tasks.get_task_dict(tasks)
+    task_dict = lm_eval.tasks.get_task_dict(tasks) # {'pubmedqa': <lm_eval.tasks.pubmedqa.Pubmed_QA object>}
 
     if check_integrity:
         run_task_tests(task_list=tasks)
-
+    
     results = evaluate(
         lm=lm,
         task_dict=task_dict,
@@ -213,6 +213,7 @@ def evaluate(
     docs_for_decontamination = collections.defaultdict(list)
 
     # get lists of each type of request
+    
     for task_name, task in task_dict_items:
         versions[task_name] = task.VERSION
         # default to test doc, fall back to val doc if validation unavailable
@@ -232,7 +233,7 @@ def evaluate(
         rnd.seed(42)
         rnd.shuffle(task_docs)
         print(f"Task: {task_name}; number of docs: {len(task_docs)}")
-
+        
         if write_out:
             prompt_details = []
 
@@ -281,7 +282,7 @@ def evaluate(
 
         if write_out:
             write_out_info[task_name] = prompt_details
-
+        
     # Compare all tasks/sets at once to ensure a single training set scan
     if decontaminate:
         from lm_eval.decontamination.decontaminate import get_train_overlap
@@ -323,7 +324,7 @@ def evaluate(
                     write_out_info[task_name][doc_id]["truth"] = task.doc_to_target(doc)
 
     vals = collections.defaultdict(list)
-
+    
     # unpack results and sort back in order and return control to Task
     for (task_name, doc_id), requests in process_res_queue.items():
         requests.sort(key=lambda x: x[0])
