@@ -36,6 +36,7 @@ from . import mmlu_anatomy
 from . import mmlu_medical_genetics
 from . import mmlu_clinical_knowledge
 from . import medqa
+from . import medmcqa
 from . import sciq
 from . import qasper
 from . import qa4mre
@@ -150,6 +151,7 @@ TASK_REGISTRY = {
     'mmlu_medical_genetics': mmlu_medical_genetics.MMLU_Medical_Genetics,
     'mmlu_clinical_knowledge': mmlu_clinical_knowledge.MMLU_Clinical_Knowledge,
     'medqa': medqa.Med_QA,
+    'medmcqa': medmcqa.MedMCQA,
     "sciq": sciq.SciQ,
     "qasper": qasper.QASPER,
     "qa4mre_2011": qa4mre.QA4MRE_2011,

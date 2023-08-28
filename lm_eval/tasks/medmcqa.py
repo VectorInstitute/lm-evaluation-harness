@@ -14,10 +14,10 @@ _CITATION = """
 """
 
 
-class MMLU_College_Bio(Task):
+class MedMCQA(Task):
     VERSION = 0
-    DATASET_PATH = "lukaemon/mmlu"
-    DATASET_NAME = "college_biology"
+    DATASET_PATH = "medmcqa"
+    DATASET_NAME = None
 
     def has_training_docs(self):
         return True
@@ -30,13 +30,12 @@ class MMLU_College_Bio(Task):
 
     def test_docs(self):
         if self.has_test_docs():
-            # HF is labelled as train but its really just for testing
-            return self.dataset["test"]
+            return self.dataset["validation"]
 
     def doc_to_text(self, doc):
         instruction = "The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information. Output a single option from the four options as the final answer."
-        question = doc['input']
-        choices = "(A) {} (B) {} (C) {} (D)".format(doc['A'], doc['B'], doc['C'], doc['D'])
+        question = doc['question']
+        choices = "(A) {} (B) {} (C) {} (D)".format(doc['opa'], doc['opb'], doc['opc'], doc['opd'])
 
         return "Instruction: {}\n\nQuestion: {}\n{}\nAnswer:".format(instruction, question, choices)
 
@@ -47,7 +46,8 @@ class MMLU_College_Bio(Task):
         return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
 
     def doc_to_target(self, doc):
-        return " ({})".format(doc['target'])
+        options = "ABCD"
+        return " ({})".format(options[doc['cop']])
 
     def construct_requests(self, doc, ctx):
         """Uses RequestFactory to construct Requests and returns
@@ -59,12 +59,13 @@ class MMLU_College_Bio(Task):
         ll_C, _ = rf.loglikelihood(ctx, " (C)")
         ll_D, _ = rf.loglikelihood(ctx, " (D)")
         return ll_A, ll_B, ll_C, ll_D
+      
 
     def process_results(self, doc, results):
-        gold = doc["target"]
+        gold = doc["cop"]
         pred = np.argmax(results)
         return {
-            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc": pred == gold,
         }
 
     def aggregation(self):

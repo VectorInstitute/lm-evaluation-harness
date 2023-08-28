@@ -68,12 +68,6 @@ class MMLU_Medical_Genetics(Task):
             "acc": ["A", "B", "C", "D"][pred] == gold,
         }
 
-        gold = doc['choices'].index(doc['answer'][0])
-        pred = np.argmax(results)
-        return {
-            "acc": pred == gold,
-        }
-
     def aggregation(self):
         return {"acc": mean}
 
