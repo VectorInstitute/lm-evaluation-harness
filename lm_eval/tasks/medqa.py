@@ -34,7 +34,7 @@ class Med_QA(Task):
             return self.dataset["test"]
 
     def doc_to_text(self, doc):
-        instruction = "The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information. Output a single option from the four options as the final answer."
+        instruction = "The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information. Output a single option from the options as the final answer."
         question = doc['question']
         choice_num = "ABCDEFG"
         choices = ""

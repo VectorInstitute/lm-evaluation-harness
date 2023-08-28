@@ -29,6 +29,12 @@ from . import prost
 from . import mc_taco
 from . import triviaqa
 from . import pubmedqa
+from . import mmlu_college_bio
+from . import mmlu_college_med
+from . import mmlu_professional_med
+from . import mmlu_anatomy
+from . import mmlu_medical_genetics
+from . import mmlu_clinical_knowledge
 from . import medqa
 from . import sciq
 from . import qasper
@@ -137,6 +143,12 @@ TASK_REGISTRY = {
     "mc_taco": mc_taco.MCTACO,
     # Science related
     "pubmedqa": pubmedqa.Pubmed_QA,
+    "mmlu_college_bio": mmlu_college_bio.MMLU_College_Bio,
+    'mmlu_college_med': mmlu_college_med.MMLU_College_Med,
+    'mmlu_professional_med': mmlu_professional_med.MMLU_Professional_Med,
+    'mmlu_anatomy': mmlu_anatomy.MMLU_Anatomy,
+    'mmlu_medical_genetics': mmlu_medical_genetics.MMLU_Medical_Genetics,
+    'mmlu_clinical_knowledge': mmlu_clinical_knowledge.MMLU_Clinical_Knowledge,
     'medqa': medqa.Med_QA,
     "sciq": sciq.SciQ,
     "qasper": qasper.QASPER,
