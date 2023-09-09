@@ -144,6 +144,7 @@ TASK_REGISTRY = {
     "mc_taco": mc_taco.MCTACO,
     # Science related
     "pubmedqa": pubmedqa.Pubmed_QA,
+    'pubmedqa_mc':pubmedqa.Pubmed_QA_MC,
     "mmlu_college_bio": mmlu_college_bio.MMLU_College_Bio,
     'mmlu_college_med': mmlu_college_med.MMLU_College_Med,
     'mmlu_professional_med': mmlu_professional_med.MMLU_Professional_Med,
@@ -151,6 +152,7 @@ TASK_REGISTRY = {
     'mmlu_medical_genetics': mmlu_medical_genetics.MMLU_Medical_Genetics,
     'mmlu_clinical_knowledge': mmlu_clinical_knowledge.MMLU_Clinical_Knowledge,
     'medqa': medqa.Med_QA,
+    'medqa_mc': medqa.Med_QA_MC,
     'medmcqa': medmcqa.MedMCQA,
     "sciq": sciq.SciQ,
     "qasper": qasper.QASPER,

@@ -36,8 +36,6 @@ class HFLM(BaseLM):
         dtype: Optional[Union[str, torch.dtype]]="auto",
     ):
         super().__init__()
-
-
         # Initialize model
         if isinstance(pretrained, transformers.PreTrainedModel):
             self.model = pretrained
@@ -60,7 +58,7 @@ class HFLM(BaseLM):
                         revision=revision,
                         trust_remote_code=trust_remote_code,
                         )
-
+        
         elif isinstance(pretrained, str):
 
             # Initialize device
@@ -102,6 +100,7 @@ class HFLM(BaseLM):
         self.model.eval()
 
         self.vocab_size = self.tokenizer.vocab_size
+        self.tokenizer.add_special_tokens({"pad_token": "<pad>"})
 
         # Validate batch_size
         assert isinstance(batch_size, (int, str))

@@ -92,6 +92,7 @@ class Med_QA(Task):
     def process_results(self, doc, results):
         gold = doc['choices'].index(doc['answer'][0])
         pred = np.argmax(results)
+        
         return {
             "acc": pred == gold,
         }
@@ -101,3 +102,77 @@ class Med_QA(Task):
 
     def higher_is_better(self):
         return {"acc": True}
+
+
+class Med_QA_MC(Task):
+    VERSION = 0
+    DATASET_PATH = "bigbio/med_qa"
+    DATASET_NAME = "med_qa_en_bigbio_qa"
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information. Output a single option from the options as the final answer."
+        question = doc['question']
+        choice_num = "ABCDEFG"
+        choices = ""
+        for i in range(len(doc['choices'])):
+            choices += "({}) {} ".format(choice_num[i], doc['choices'][i])
+        choices = choices[:-1]
+
+        return "Instruction: {}\n\nQuestion: {}\n{}\nAnswer:".format(instruction, question, choices)
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        choice_num = "ABCDEFG"
+        choice = doc['choices'].index(doc['answer'][0])
+
+        return " ({})".format(choice_num[choice])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+        choice_num = "ABCDEFG"
+        num_choices = len(doc['choices'])
+
+        lls = [
+            rf.loglikelihood(ctx, " ({}) {}".format(choice_num[i], doc['choices'][i]))[0] for i in range(num_choices)
+        ]
+        
+        return lls
+
+    def process_results(self, doc, results):
+        gold = doc['choices'].index(doc['answer'][0])
+        pred = np.argmax(results)
+        completion_len = np.array([float(len(i)) for i in doc["choices"]])
+        acc_norm = 1.0 if np.argmax(results / completion_len) == gold else 0.0
+        return {
+            "acc": pred == gold,
+            "acc_norm": acc_norm,
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_norm": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_norm": True}

@@ -69,7 +69,6 @@ def simple_evaluate(
     np.random.seed(1234)
     
     assert tasks != [], "No tasks specified"
-
     if isinstance(model, str):
         if model_args is None:
             model_args = ""
@@ -245,7 +244,7 @@ def evaluate(
         if limit is not None:
             limit = int(len(task_docs) * limit) if limit < 1.0 else int(limit)
 
-        for doc_id, doc in enumerate(itertools.islice(task_docs, 0, limit)):
+        for doc_id, doc in enumerate(itertools.islice(task_docs, 600, limit)):
             if decontaminate and task.should_decontaminate():
                 docs_for_decontamination[(task_name, task_set)].append(
                     task.doc_to_decontamination_query(doc)
@@ -307,7 +306,8 @@ def evaluate(
         resps = [
             x if req.index is None else x[req.index] for x, req in zip(resps, reqs)
         ]
-
+        
+        current_doc_id = -1
         for resp, (i, task_name, doc, doc_id) in zip(resps, requests_origin[reqtype]):
             process_res_queue[(task_name, doc_id)].append((i, resp))
 
@@ -322,6 +322,10 @@ def evaluate(
                     ]
                 else:
                     write_out_info[task_name][doc_id]["truth"] = task.doc_to_target(doc)
+                    if current_doc_id != doc_id:
+                        print(doc_id)
+                        write_out_info[task_name][doc_id]["generation"] = task.doc_to_generate(doc, lm)
+                        current_doc_id = doc_id
 
     vals = collections.defaultdict(list)
     
@@ -377,11 +381,11 @@ def evaluate(
             if output_base_path is not None
             else pathlib.Path(".")
         )
-        try:
-            output_base_path.mkdir(parents=True, exist_ok=False)
-        except FileExistsError:
-            pass
-
+        # try:
+        #     output_base_path.mkdir(parents=True, exist_ok=False)
+        # except FileExistsError:
+        #     pass
+        
         for task_name, _ in task_dict_items:
             with open(
                 output_base_path.joinpath(f"{task_name}_write_out_info.json"),
