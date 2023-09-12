@@ -24,6 +24,7 @@ def simple_evaluate(
     device=None,
     no_cache=False,
     limit=None,
+    lower_limit=0,
     bootstrap_iters=100000,
     description_dict=None,
     check_integrity=False,
@@ -106,6 +107,7 @@ def simple_evaluate(
         task_dict=task_dict,
         num_fewshot=num_fewshot,
         limit=limit,
+        lower_limit=lower_limit,
         bootstrap_iters=bootstrap_iters,
         description_dict=description_dict,
         decontamination_ngrams_path=decontamination_ngrams_path,
@@ -145,6 +147,7 @@ def evaluate(
     provide_description=None,
     num_fewshot=0,
     limit=None,
+    lower_limit=0,
     bootstrap_iters=100000,
     description_dict=None,
     decontamination_ngrams_path=None,
@@ -183,7 +186,7 @@ def evaluate(
         print(
             "WARNING: provide_description is deprecated and will be removed in a future version in favor of description_dict"
         )
-
+    
     decontaminate = decontamination_ngrams_path is not None
 
     task_dict_items = [
@@ -243,8 +246,8 @@ def evaluate(
         )
         if limit is not None:
             limit = int(len(task_docs) * limit) if limit < 1.0 else int(limit)
-
-        for doc_id, doc in enumerate(itertools.islice(task_docs, 600, limit)):
+        
+        for doc_id, doc in enumerate(itertools.islice(task_docs, lower_limit, limit)):
             if decontaminate and task.should_decontaminate():
                 docs_for_decontamination[(task_name, task_set)].append(
                     task.doc_to_decontamination_query(doc)
@@ -293,7 +296,7 @@ def evaluate(
 
     # all responses for each (task, doc)
     process_res_queue = collections.defaultdict(list)
-
+    
     # execute each type of request
     for reqtype, reqs in requests.items():
         # TODO: right now, this code runs multiple separate LM requests for multiple Requests differing
@@ -387,8 +390,10 @@ def evaluate(
         #     pass
         
         for task_name, _ in task_dict_items:
+            # lm_model_name = lm.model.name_or_path[lm.model.name_or_path.index("llama"):lm.model.name_or_path.index("final")-1]
+            lm_model_name = "llama-2-7b-base"
             with open(
-                output_base_path.joinpath(f"{task_name}_write_out_info.json"),
+                output_base_path.joinpath(f"{task_name}_write_out_info_{lm_model_name}_{lower_limit}to{limit}.json"),
                 "w",
                 encoding="utf8",
             ) as fp:

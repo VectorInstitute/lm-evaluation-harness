@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument("--limit", type=float, default=None,
                         help="Limit the number of examples per task. "
                              "If <1, limit is a percentage of the total number of examples.")
+    parser.add_argument("--lower_limit", type=int, default=0)    
     parser.add_argument("--data_sampling", type=float, default=None)
     parser.add_argument("--no_cache", action="store_true")
     parser.add_argument("--decontamination_ngrams_path", default=None)
@@ -66,6 +67,7 @@ def main():
         device=args.device,
         no_cache=args.no_cache,
         limit=args.limit,
+        lower_limit=args.lower_limit,
         description_dict=description_dict,
         decontamination_ngrams_path=args.decontamination_ngrams_path,
         check_integrity=args.check_integrity,

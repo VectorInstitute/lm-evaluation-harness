@@ -212,6 +212,7 @@ class BaseLM(LM):
 
     def loglikelihood(self, requests):
         new_reqs = []
+        
         for context, continuation in requests:
             if context == "":
                 # end of text as context

@@ -112,8 +112,8 @@ class Pubmed_QA(Task):
 
     def doc_to_text(self, doc):
         ctxs = "\n".join(doc["context"]["contexts"])
-        instruction = "The following is a question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from yes, no, or maybe."
-        return "Prompt: {}\n\nAbstract: {}\nQuestion: {}\nAnswer:".format(
+        instruction = "<s>The following is a question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from yes, no, or maybe."
+        return "{}\n\nAbstract: {}\nQuestion: {}\nAnswer:".format(
             instruction, ctxs, doc["question"], doc["final_decision"]
         )
 
@@ -152,13 +152,14 @@ class Pubmed_QA(Task):
         
 
         ctxs = "\n".join(doc["context"]["contexts"])
-        instruction = "The following is a question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from yes, no, or maybe."
-        prompt = "Prompt: {}\n\nAbstract: {}\nQuestion: {}\nAnswer:".format(
+        instruction = "<s>The following is a question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from yes, no, or maybe."
+        prompt = "{}\n\nAbstract: {}\nQuestion: {}\nAnswer:".format(
             instruction, ctxs, doc["question"], doc["final_decision"]
         )
 
         tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
-        model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_length=1024, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_length=1024, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
         ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
         return ans
