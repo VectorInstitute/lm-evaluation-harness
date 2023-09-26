@@ -159,7 +159,7 @@ class Pubmed_QA(Task):
 
         tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
         with torch.no_grad():
-            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_length=1024, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_length=200, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
         ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
 
         return ans

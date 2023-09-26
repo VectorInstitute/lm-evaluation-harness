@@ -235,7 +235,13 @@ def evaluate(
         rnd.seed(42)
         rnd.shuffle(task_docs)
         print(f"Task: {task_name}; number of docs: {len(task_docs)}")
-        
+        # Augmenting ground truth options.
+        augmented_target = "original"
+        # for i in range(len(task_docs)):
+        #     if task_docs[i]['target'] != augmented_target:
+        #         task_docs[i][augmented_target], task_docs[i][task_docs[i]['target']] = task_docs[i][task_docs[i]['target']], task_docs[i][augmented_target]
+        #         task_docs[i]['target'] = augmented_target
+
         if write_out:
             prompt_details = []
 
@@ -296,7 +302,7 @@ def evaluate(
 
     # all responses for each (task, doc)
     process_res_queue = collections.defaultdict(list)
-    
+    # import pdb; pdb.set_trace()
     # execute each type of request
     for reqtype, reqs in requests.items():
         # TODO: right now, this code runs multiple separate LM requests for multiple Requests differing
@@ -325,10 +331,10 @@ def evaluate(
                     ]
                 else:
                     write_out_info[task_name][doc_id]["truth"] = task.doc_to_target(doc)
-                    if current_doc_id != doc_id:
-                        print(doc_id)
-                        write_out_info[task_name][doc_id]["generation"] = task.doc_to_generate(doc, lm)
-                        current_doc_id = doc_id
+                    # if current_doc_id != doc_id:
+                        # print(doc_id)
+                        # write_out_info[task_name][doc_id]["generation"] = task.doc_to_generate(doc, lm)
+                        # current_doc_id = doc_id
 
     vals = collections.defaultdict(list)
     
@@ -391,9 +397,11 @@ def evaluate(
         
         for task_name, _ in task_dict_items:
             # lm_model_name = lm.model.name_or_path[lm.model.name_or_path.index("llama"):lm.model.name_or_path.index("final")-1]
-            lm_model_name = "llama-2-7b-base"
+            # lm_model_name = "7b_mdpi_mtb_fixed"
+            # lm_model_name = "7b_base"
+            lm_model_name = "7b_base_chat"
             with open(
-                output_base_path.joinpath(f"{task_name}_write_out_info_{lm_model_name}_{lower_limit}to{limit}.json"),
+                output_base_path.joinpath(f"Manual_{task_name}_write_out_info_{lm_model_name}_{lower_limit}to{limit}_{augmented_target}.json"),
                 "w",
                 encoding="utf8",
             ) as fp:
