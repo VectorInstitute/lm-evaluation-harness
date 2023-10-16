@@ -31,6 +31,7 @@ def simple_evaluate(
     decontamination_ngrams_path=None,
     write_out=False,
     output_base_path=None,
+    lm_model_name='7b_base',
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
@@ -113,6 +114,7 @@ def simple_evaluate(
         decontamination_ngrams_path=decontamination_ngrams_path,
         write_out=write_out,
         output_base_path=output_base_path,
+        lm_model_name=lm_model_name,
     )
 
     # add info about the model and few shot config
@@ -153,6 +155,7 @@ def evaluate(
     decontamination_ngrams_path=None,
     write_out=False,
     output_base_path=None,
+    lm_model_name='7b_base',
 ):
     """Instantiate and evaluate a model on a list of tasks.
 
@@ -399,9 +402,11 @@ def evaluate(
             # lm_model_name = lm.model.name_or_path[lm.model.name_or_path.index("llama"):lm.model.name_or_path.index("final")-1]
             # lm_model_name = "7b_mdpi_mtb_fixed"
             # lm_model_name = "7b_base"
-            lm_model_name = "7b_base_chat"
+            # lm_model_name = "7b_base_chat"
+            # lm_model_name = "7b_mdpi_mtb_plateu"
+            # lm_model_name = "7b_mdpi_mtb_25_cosine"
             with open(
-                output_base_path.joinpath(f"Manual_{task_name}_write_out_info_{lm_model_name}_{lower_limit}to{limit}_{augmented_target}.json"),
+                output_base_path.joinpath(f"{task_name}_write_out_info_{lm_model_name}_{lower_limit}to{limit}_{augmented_target}.json"),
                 "w",
                 encoding="utf8",
             ) as fp:

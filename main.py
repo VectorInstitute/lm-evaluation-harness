@@ -19,6 +19,7 @@ def parse_args():
     parser.add_argument("--max_batch_size", type=int, default=None,
                         help="Maximal batch size to try with --batch_size auto")
     parser.add_argument("--device", type=str, default=None)
+    parser.add_argument("--lm_model_name", type=str, default='7b_base')
     parser.add_argument("--output_path", default=None)
     parser.add_argument("--limit", type=float, default=None,
                         help="Limit the number of examples per task. "
@@ -73,6 +74,7 @@ def main():
         check_integrity=args.check_integrity,
         write_out=args.write_out,
         output_base_path=args.output_base_path,
+        lm_model_name=args.lm_model_name,
     )
 
     dumped = json.dumps(results, indent=2)

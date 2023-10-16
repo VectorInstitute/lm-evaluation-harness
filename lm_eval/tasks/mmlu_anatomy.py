@@ -2,6 +2,7 @@ import numpy as np
 from lm_eval.base import rf, Task
 from lm_eval.metrics import mean
 import torch
+from transformers import LlamaTokenizer
 
 
 _CITATION = """
@@ -15,7 +16,92 @@ _CITATION = """
 """
 
 
-class MMLU_Anatomy(Task):
+# class MMLU_Anatomy(Task):
+#     VERSION = 0
+#     DATASET_PATH = "lukaemon/mmlu"
+#     DATASET_NAME = "anatomy"
+
+#     def has_training_docs(self):
+#         return True
+
+#     def has_validation_docs(self):
+#         return True
+
+#     def has_test_docs(self):
+#         return True
+
+#     def test_docs(self):
+#         if self.has_test_docs():
+#             # HF is labelled as train but its really just for testing 134 questions
+#             return self.dataset["test"]
+
+#     def doc_to_text(self, doc):
+#         instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+#         question = doc['input']
+#         choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+#         return "{}\n\nQuestion: {}\n{}\nAnswer: [/INST]".format(instruction, question, choices)
+
+#     def doc_to_generate(self, doc, model):
+#         tokenizer = model.tokenizer
+#         model = model.model
+#         # tokenizer.model_max_length = 1024
+#         model.config.pad_token_id = tokenizer.pad_token_id
+#         model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+#         instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+#         question = doc['input']
+#         choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+#         prompt = "{}\n\nQuestion: {}\n{}\nAnswer: [/INST]".format(instruction, question, choices)
+
+#         tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+#         with torch.no_grad():
+#             model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+#         ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+#         return ans
+
+#     def should_decontaminate(self):
+#         return True
+
+#     def doc_to_decontamination_query(self, doc):
+#         return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+#     def doc_to_target(self, doc):
+#         return " ({})".format(doc['target'])
+
+#     def construct_requests(self, doc, ctx):
+#         """Uses RequestFactory to construct Requests and returns
+#         an iterable of Requests which will be sent to the LM.
+#         """
+    
+#         ll_A, _ = rf.loglikelihood(ctx, " (A)")
+#         ll_B, _ = rf.loglikelihood(ctx, " (B)")
+#         ll_C, _ = rf.loglikelihood(ctx, " (C)")
+#         ll_D, _ = rf.loglikelihood(ctx, " (D)")
+#         return ll_A, ll_B, ll_C, ll_D
+#         # ll_A, _ = rf.loglikelihood("Answer:", " (A)")
+#         # ll_B, _ = rf.loglikelihood("Answer:", " (B)")
+#         # ll_C, _ = rf.loglikelihood("Answer:", " (C)")
+#         # ll_D, _ = rf.loglikelihood("Answer:", " (D)")
+#         # return ll_A, ll_B, ll_C, ll_D
+      
+
+#     def process_results(self, doc, results):
+#         gold = doc["target"]
+#         pred = np.argmax(results)
+#         return {
+#             "acc": ["A", "B", "C", "D"][pred] == gold,
+#         }
+
+#     def aggregation(self):
+#         return {"acc": mean}
+
+#     def higher_is_better(self):
+#         return {"acc": True}
+
+class Unconditional(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "anatomy"
@@ -75,17 +161,140 @@ class MMLU_Anatomy(Task):
         an iterable of Requests which will be sent to the LM.
         """
     
+        # ll_A, _ = rf.loglikelihood(ctx, " (A)")
+        # ll_B, _ = rf.loglikelihood(ctx, " (B)")
+        # ll_C, _ = rf.loglikelihood(ctx, " (C)")
+        # ll_D, _ = rf.loglikelihood(ctx, " (D)")
+        # return ll_A, ll_B, ll_C, ll_D
+        # ll_A, _ = rf.loglikelihood("The answer to the question is", " (1)")
+        # ll_B, _ = rf.loglikelihood("The answer to the question is", " (2)")
+        # ll_C, _ = rf.loglikelihood("The answer to the question is", " (3)")
+        # ll_D, _ = rf.loglikelihood("The answer to the question is", " (4)")
+        # ll_A, _ = rf.loglikelihood("The answer to the question is", " ##A")
+        # ll_B, _ = rf.loglikelihood("The answer to the question is", " ##B")
+        # ll_C, _ = rf.loglikelihood("The answer to the question is", " ##C")
+        # ll_D, _ = rf.loglikelihood("The answer to the question is", " ##D")
+        # ll_A, _ = rf.loglikelihood("The answer to the question is", " (W)")
+        # ll_B, _ = rf.loglikelihood("The answer to the question is", " (X)")
+        # ll_C, _ = rf.loglikelihood("The answer to the question is", " (Y)")
+        # ll_D, _ = rf.loglikelihood("The answer to the question is", " (Z)")
+        # # ll_A, _ = rf.loglikelihood("The answer to the question is", " (A4)")
+        # # ll_B, _ = rf.loglikelihood("The answer to the question is", " (B3)")
+        # # ll_C, _ = rf.loglikelihood("The answer to the question is", " (C2)")
+        # # ll_D, _ = rf.loglikelihood("The answer to the question is", " (D1)")
+        # ll_E, _ = rf.loglikelihood("The answer to the question is", " (11)")
+        # ll_F, _ = rf.loglikelihood("The answer to the question is", " (12)")
+        # ll_G, _ = rf.loglikelihood("The answer to the question is", " (13)")
+        # ll_H, _ = rf.loglikelihood("The answer to the question is", " (14)")
+        ll_A, _ = rf.loglikelihood("The answer to the question is the option", " (A")
+        ll_B, _ = rf.loglikelihood("The answer to the question is the option", " (B")
+        ll_C, _ = rf.loglikelihood("The answer to the question is the option", " (C")
+        ll_D, _ = rf.loglikelihood("The answer to the question is the option", " (D")
+        ll_E, _ = rf.loglikelihood("The answer to the question is the option", " (E")
+        ll_F, _ = rf.loglikelihood("The answer to the question is the option", " (F")
+        ll_G, _ = rf.loglikelihood("The answer to the question is the option", " (G")
+        ll_H, _ = rf.loglikelihood("The answer to the question is the option", " (H")
+        ll_1, _ = rf.loglikelihood("The answer to the question is the option", " (I")
+        ll_2, _ = rf.loglikelihood("The answer to the question is the option", " (J")
+        ll_3, _ = rf.loglikelihood("The answer to the question is the option", " (K")
+        ll_4, _ = rf.loglikelihood("The answer to the question is the option", " (L")
+        ll_5, _ = rf.loglikelihood("The answer to the question is the option", " (M")
+        ll_6, _ = rf.loglikelihood("The answer to the question is the option", " (N")
+        ll_7, _ = rf.loglikelihood("The answer to the question is the option", " (O")
+        ll_8, _ = rf.loglikelihood("The answer to the question is the option", " (P")
+        ll_9, _ = rf.loglikelihood("The answer to the question is the option", " (Q")
+        ll_10, _ = rf.loglikelihood("The answer to the question is the option", " (R")
+        ll_11, _ = rf.loglikelihood("The answer to the question is the option", " (S")
+        ll_12, _ = rf.loglikelihood("The answer to the question is the option", " (U")
+        ll_13, _ = rf.loglikelihood("The answer to the question is the option", " (V")
+        ll_14, _ = rf.loglikelihood("The answer to the question is the option", " (W")
+        ll_15, _ = rf.loglikelihood("The answer to the question is the option", " (X")
+        ll_16, _ = rf.loglikelihood("The answer to the question is the option", " (Y")
+        ll_17, _ = rf.loglikelihood("The answer to the question is the option", " (Z")
+        return ll_A, ll_B, ll_C, ll_D, ll_E, ll_F, ll_G, ll_H, ll_1, ll_2, ll_3, ll_4, ll_5, ll_6, ll_7, ll_8, ll_9, ll_10, ll_11, ll_12, ll_13, ll_14, ll_15, ll_16, ll_17
+      
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        # pred = np.argmax(results)
+        pred = 0
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+        }
+
+    def aggregation(self):
+        return {"acc": mean}
+
+    def higher_is_better(self):
+        return {"acc": True}
+
+
+class MMLU_Anatomy(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{}\nAnswer: [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{}\nAnswer: [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
         ll_A, _ = rf.loglikelihood(ctx, " (A)")
         ll_B, _ = rf.loglikelihood(ctx, " (B)")
         ll_C, _ = rf.loglikelihood(ctx, " (C)")
         ll_D, _ = rf.loglikelihood(ctx, " (D)")
+
         return ll_A, ll_B, ll_C, ll_D
-        # ll_A, _ = rf.loglikelihood("Answer:", " (A)")
-        # ll_B, _ = rf.loglikelihood("Answer:", " (B)")
-        # ll_C, _ = rf.loglikelihood("Answer:", " (C)")
-        # ll_D, _ = rf.loglikelihood("Answer:", " (D)")
-        # return ll_A, ll_B, ll_C, ll_D
-      
 
     def process_results(self, doc, results):
         gold = doc["target"]
@@ -99,3 +308,813 @@ class MMLU_Anatomy(Task):
 
     def higher_is_better(self):
         return {"acc": True}
+
+class MMLU_Anatomy_1(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+
+        ll_A, _ = rf.loglikelihood(ctx, " The answer to the question is (A)")
+        ll_B, _ = rf.loglikelihood(ctx, " The answer to the question is (B)")
+        ll_C, _ = rf.loglikelihood(ctx, " The answer to the question is (C)")
+        ll_D, _ = rf.loglikelihood(ctx, " The answer to the question is (D)")
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+        }
+
+    def aggregation(self):
+        return {"acc": mean}
+
+    def higher_is_better(self):
+        return {"acc": True}
+
+
+class MMLU_Anatomy_2(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{}\nThe answer to the question is [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{}\nThe answer to the question is [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, "(A) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, "(B) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, "(C) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, "(D) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
+
+class MMLU_Anatomy_3(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{}\nThe answer to the question is [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{}\nAnswer: [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " (A)")
+        ll_B, _ = rf.loglikelihood(ctx, " (B)")
+        ll_C, _ = rf.loglikelihood(ctx, " (C)")
+        ll_D, _ = rf.loglikelihood(ctx, " (D)")
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+        }
+
+    def aggregation(self):
+        return {"acc": mean}
+
+    def higher_is_better(self):
+        return {"acc": True}
+
+
+class MMLU_Anatomy_4(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " The answer to the question is (A) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, " The answer to the question is (B) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, " The answer to the question is (C) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, " The answer to the question is (D) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
+
+
+class MMLU_Anatomy_5(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " Answer: (A) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, " Answer: (B) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, " Answer: (C) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, " Answer: (D) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
+
+
+class MMLU_Anatomy_6(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{}\nAnswer: [/INST]".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{} [/INST]".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " (A) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, " (B) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, " (C) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, " (D) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
+
+
+class MMLU_Anatomy_8(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{} [/INST] The answer to the question is".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{}\n [/INST] The answer to the question is".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " (A) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, " (B) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, " (C) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, " (D) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
+
+class MMLU_Anatomy_9(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{} [/INST] The answer to the question is".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{} [/INST] The answer to the question is the option".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " (A) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, " (B) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, " (C) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, " (D) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
+
+
+class MMLU_Anatomy_10(Task):
+    VERSION = 0
+    DATASET_PATH = "lukaemon/mmlu"
+    DATASET_NAME = "anatomy"
+    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+
+    def has_training_docs(self):
+        return True
+
+    def has_validation_docs(self):
+        return True
+
+    def has_test_docs(self):
+        return True
+
+    def test_docs(self):
+        if self.has_test_docs():
+            # HF is labelled as train but its really just for testing
+            return self.dataset["test"]
+
+    def doc_to_text(self, doc):
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(J) {} (K) {} (L) {} (M) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        return "{}\n\nQuestion: {}\n{} [/INST] The answer to the question is the option".format(instruction, question, choices)
+
+    def doc_to_generate(self, doc, model):
+        tokenizer = model.tokenizer
+        model = model.model
+        # tokenizer.model_max_length = 1024
+        model.config.pad_token_id = tokenizer.pad_token_id
+        model.generation_config.pad_token_id = tokenizer.pad_token_id
+
+        instruction = "<s>[INST] The following is a multiple choice question about medical knowledge. Solve it in a step-by-step fashion, starting by summarizing the available information from the abstract. Output a single option from the four options as the final answer."
+        question = doc['input']
+        choices = "(A) {} (B) {} (C) {} (D) {}".format(doc['A'], doc['B'], doc['C'], doc['D'])
+
+        prompt = "{}\n\nQuestion: {}\n{} [/INST] The answer to the question is the option".format(instruction, question, choices)
+
+        tokenized_user = tokenizer.encode(f"{prompt}", add_special_tokens=False)
+        with torch.no_grad():
+            model_generation = model.generate(torch.tensor(tokenized_user).reshape(1, -1).cuda(), max_new_tokens=500, top_p=0.1, do_sample=True, temperature=0.7, top_k=40)[:, len(tokenized_user):]
+        ans=tokenizer.batch_decode(model_generation, skip_special_tokens=True, clean_up_tokenization_spaces=True)[0]
+
+        return ans
+
+    def should_decontaminate(self):
+        return True
+
+    def doc_to_decontamination_query(self, doc):
+        return doc["question"] + " " + "\n".join(doc["context"]["contexts"])
+
+    def doc_to_target(self, doc):
+        return " ({})".format(doc['target'])
+
+    def construct_requests(self, doc, ctx):
+        """Uses RequestFactory to construct Requests and returns
+        an iterable of Requests which will be sent to the LM.
+        """
+    
+        ll_A, _ = rf.loglikelihood(ctx, " (J) {}".format(doc['A']))
+        ll_B, _ = rf.loglikelihood(ctx, " (K) {}".format(doc['B']))
+        ll_C, _ = rf.loglikelihood(ctx, " (L) {}".format(doc['C']))
+        ll_D, _ = rf.loglikelihood(ctx, " (M) {}".format(doc['D']))
+
+        return ll_A, ll_B, ll_C, ll_D
+
+    def process_results(self, doc, results):
+        gold = doc["target"]
+        pred = np.argmax(results)
+        choices = ['A', 'B', 'C', 'D']
+        completion_len = []
+        for choice in choices:
+            comp_len = len(self.TOKENIZER.encode(doc[choice], add_special_tokens=False))
+            completion_len.append(comp_len)
+        completion_len = np.array(completion_len)
+        acc_norm = 1.0 if ["A", "B", "C", "D"][np.argmax(results / completion_len)] == gold else 0.0
+
+        return {
+            "acc": ["A", "B", "C", "D"][pred] == gold,
+            "acc_ln": acc_norm
+        }
+
+    def aggregation(self):
+        return {"acc": mean,
+                "acc_ln": mean}
+
+    def higher_is_better(self):
+        return {"acc": True,
+                "acc_ln": True}
