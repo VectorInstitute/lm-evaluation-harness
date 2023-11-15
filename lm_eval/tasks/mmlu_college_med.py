@@ -262,7 +262,7 @@ class MMLU_College_Med_2(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -435,7 +435,7 @@ class MMLU_College_Med_4(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -528,7 +528,7 @@ class MMLU_College_Med_5(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -621,7 +621,7 @@ class MMLU_College_Med_6(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -713,7 +713,7 @@ class MMLU_College_Med_10(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -806,7 +806,7 @@ class MMLU_College_Med_hash1(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 179491521287519280747249352307866843065
@@ -903,7 +903,7 @@ class MMLU_College_Med_hash2(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 251641330961508840300859728733861258365
@@ -999,7 +999,7 @@ class MMLU_College_Med_hash1_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 179491521287519280747249352307866843065
@@ -1095,7 +1095,7 @@ class MMLU_College_Med_hash2_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 251641330961508840300859728733861258365
@@ -1191,7 +1191,7 @@ class MMLU_College_Med_hash3_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 179491521287519280747249352307866843065
     HASH_C = 42153102473430943978356466882713948524
@@ -1287,7 +1287,7 @@ class MMLU_College_Med_hash4_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 179491521287519280747249352307866843065
     HASH_C = 251641330961508840300859728733861258365
@@ -1384,7 +1384,7 @@ class MMLU_College_Med_hash5_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 251641330961508840300859728733861258365
     HASH_C = 42153102473430943978356466882713948524
@@ -1480,7 +1480,7 @@ class MMLU_College_Med_hash6_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 109968089644040838145941759714669090478
     HASH_B = 251641330961508840300859728733861258365
     HASH_C = 179491521287519280747249352307866843065
@@ -1577,7 +1577,7 @@ class MMLU_College_Med_hash7_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 42153102473430943978356466882713948524
     HASH_B = 109968089644040838145941759714669090478
     HASH_C = 179491521287519280747249352307866843065
@@ -1673,7 +1673,7 @@ class MMLU_College_Med_hash8_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 42153102473430943978356466882713948524
     HASH_B = 109968089644040838145941759714669090478
     HASH_C = 251641330961508840300859728733861258365
@@ -1769,7 +1769,7 @@ class MMLU_College_Med_hash9_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 42153102473430943978356466882713948524
     HASH_B = 179491521287519280747249352307866843065
     HASH_C = 109968089644040838145941759714669090478
@@ -1865,7 +1865,7 @@ class MMLU_College_Med_hash10_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 42153102473430943978356466882713948524
     HASH_B = 179491521287519280747249352307866843065
     HASH_C = 251641330961508840300859728733861258365
@@ -1961,7 +1961,7 @@ class MMLU_College_Med_hash11_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 42153102473430943978356466882713948524
     HASH_B = 251641330961508840300859728733861258365
     HASH_C = 109968089644040838145941759714669090478
@@ -2057,7 +2057,7 @@ class MMLU_College_Med_hash12_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 42153102473430943978356466882713948524
     HASH_B = 251641330961508840300859728733861258365
     HASH_C = 179491521287519280747249352307866843065
@@ -2153,7 +2153,7 @@ class MMLU_College_Med_hash13_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 179491521287519280747249352307866843065
     HASH_B = 109968089644040838145941759714669090478
     HASH_C = 42153102473430943978356466882713948524
@@ -2249,7 +2249,7 @@ class MMLU_College_Med_hash14_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 179491521287519280747249352307866843065
     HASH_B = 109968089644040838145941759714669090478
     HASH_C = 251641330961508840300859728733861258365
@@ -2345,7 +2345,7 @@ class MMLU_College_Med_hash15_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 179491521287519280747249352307866843065
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 109968089644040838145941759714669090478
@@ -2441,7 +2441,7 @@ class MMLU_College_Med_hash16_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 179491521287519280747249352307866843065
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 251641330961508840300859728733861258365
@@ -2537,7 +2537,7 @@ class MMLU_College_Med_hash17_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 179491521287519280747249352307866843065
     HASH_B = 251641330961508840300859728733861258365
     HASH_C = 109968089644040838145941759714669090478 
@@ -2633,7 +2633,7 @@ class MMLU_College_Med_hash18_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 179491521287519280747249352307866843065
     HASH_B = 251641330961508840300859728733861258365
     HASH_C = 42153102473430943978356466882713948524
@@ -2729,7 +2729,7 @@ class MMLU_College_Med_hash19_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 251641330961508840300859728733861258365
     HASH_B = 109968089644040838145941759714669090478
     HASH_C = 42153102473430943978356466882713948524
@@ -2825,7 +2825,7 @@ class MMLU_College_Med_hash20_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 251641330961508840300859728733861258365
     HASH_B = 109968089644040838145941759714669090478
     HASH_C = 179491521287519280747249352307866843065
@@ -2921,7 +2921,7 @@ class MMLU_College_Med_hash21_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 251641330961508840300859728733861258365
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 109968089644040838145941759714669090478
@@ -3017,7 +3017,7 @@ class MMLU_College_Med_hash22_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 251641330961508840300859728733861258365
     HASH_B = 42153102473430943978356466882713948524
     HASH_C = 179491521287519280747249352307866843065
@@ -3113,7 +3113,7 @@ class MMLU_College_Med_hash23_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 251641330961508840300859728733861258365
     HASH_B = 179491521287519280747249352307866843065
     HASH_C = 109968089644040838145941759714669090478
@@ -3209,7 +3209,7 @@ class MMLU_College_Med_hash24_wo_actual_answer(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_medicine"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
     HASH_A = 251641330961508840300859728733861258365
     HASH_B = 179491521287519280747249352307866843065
     HASH_C = 42153102473430943978356466882713948524 

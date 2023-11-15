@@ -181,7 +181,7 @@ class MMLU_College_Bio_2(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_biology"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -354,7 +354,7 @@ class MMLU_College_Bio_4(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_biology"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -447,7 +447,7 @@ class MMLU_College_Bio_5(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_biology"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -540,7 +540,7 @@ class MMLU_College_Bio_6(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_biology"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -633,7 +633,7 @@ class MMLU_College_Bio_10(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "college_biology"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True

@@ -262,7 +262,7 @@ class MMLU_Medical_Genetics_2(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "medical_genetics"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -435,7 +435,7 @@ class MMLU_Medical_Genetics_4(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "medical_genetics"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -528,7 +528,7 @@ class MMLU_Medical_Genetics_5(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "medical_genetics"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -621,7 +621,7 @@ class MMLU_Medical_Genetics_6(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "medical_genetics"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
@@ -714,7 +714,7 @@ class MMLU_Medical_Genetics_10(Task):
     VERSION = 0
     DATASET_PATH = "lukaemon/mmlu"
     DATASET_NAME = "medical_genetics"
-    TOKENIZER = LlamaTokenizer.from_pretrained("/voyager/projects/younwoo/llama/Llama-2-7b-chat-hf/")
+    TOKENIZER = LlamaTokenizer.from_pretrained("/model-weights/Llama-2-7b-hf/")
 
     def has_training_docs(self):
         return True
